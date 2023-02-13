@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
-    @PostMapping("/login")
+    @PostMapping("/v1/login")
     public ResponseEntity login(@RequestBody @Valid LoginDTO request) throws Exception {
         AccessTokenDTO token = userService.login(request.toEntity());
 
@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "NOT FOUND"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
-    @GetMapping("/me")
+    @GetMapping("/v1/me")
     public ResponseEntity myInfo(HttpServletRequest request) throws Exception {
         Long id = jwtUtil.getIdFromToken(request.getHeader("Authorization"));
         UserResponse response = UserResponse.from(userService.getInfo(id));
