@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.Chat.ChatResponse;
+import com.example.demo.dto.Chat.ChatRequest;
+import com.example.demo.intercepter.CurrentUserInfo;
+import com.example.demo.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,22 +18,50 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatbotController {
+    private ChatService chatService;
+
     @Operation(summary = "챗봇 질의응답", description = "챗봇과의 질의응답을 위한 api입니다.", tags = { "ChatbotController" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = @Content(schema = @Schema(implementation = ChatResponse.class))),
+            @ApiResponse(responseCode = "202", description = "ACCEPTED"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND"),
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/v1/chat")
-    public ResponseEntity myInfo(@RequestBody String question, HttpServletRequest request) throws Exception {
+    public ResponseEntity chat(@RequestBody ChatRequest chatRequest, HttpServletRequest request) throws Exception {
         // 1. 내 정보 가져오기
+        CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
 
         // 2. 질문 및 내 정보로 답변 요청 (python chatbot)
+        chatService.request(user.getId(), chatRequest);
 
-        // 3. 답변 반환
-        ChatResponse response = new ChatResponse("테스트 답변입니다.");
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.accepted().build();
+    }
+
+    @Operation(summary = "답변 상태 변경", description = "답변중인지 여부를 업데이트합니다.", tags = { "ChatbotController" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "NO CONTENT"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
+    @PutMapping("/v1/status")
+    public ResponseEntity updateChatStatus(@RequestBody Long user_id, @RequestBody Boolean isAnswering) throws Exception {
+        chatService.updateStatus(user_id, isAnswering);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/v1/context")
+    public ResponseEntity contextSwitching(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
+        CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
+        chatService.contextSwitching(user.getId(), fcmToken);
+        return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/v1/source")
+    public ResponseEntity getSource(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
+        CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
+        chatService.getSource(user.getId(), fcmToken);
+        return ResponseEntity.accepted().build();
     }
 }
