@@ -2,11 +2,11 @@ package com.example.demo.serviceImpl;
 
 import com.example.demo.domain.User;
 import com.example.demo.dto.token.AccessTokenDTO;
-import com.example.demo.exception.ErrorCode;
-import com.example.demo.exception.UserException;
+import com.example.demo.exceptions.ErrorCode;
+import com.example.demo.exceptions.UserException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import com.example.demo.util.JwtUtil;
+import com.example.demo.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,4 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public User findMember(Long memberId) { return userRepository.findOne(memberId);}
+
+    public void updateAnsweringStatus(Long user_id, Boolean isAnswering) throws Exception {
+        User user = getInfo(user_id);
+        user.setAnswering(isAnswering);
+    }
 }
