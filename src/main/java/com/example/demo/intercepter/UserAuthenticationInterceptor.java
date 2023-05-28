@@ -18,7 +18,7 @@ public class UserAuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         CurrentUserInfo user = new CurrentUserInfo();
         try {
-            String token = request.getHeader("X-AUTH-TOKEN");
+            String token = request.getHeader("Authorization");
             jwtUtil.validateToken(token);
             user.setId(jwtUtil.getIdFromToken(token));
 
