@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.Chat.ChatRequest;
+import com.example.demo.dto.Chat.Request;
+import com.example.demo.dto.Chat.StatusRequest;
 import com.example.demo.intercepter.CurrentUserInfo;
 import com.example.demo.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,8 +48,8 @@ public class ChatbotController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PutMapping("/v1/status")
-    public ResponseEntity updateChatStatus(@RequestBody Long user_id, @RequestBody Boolean isAnswering) throws Exception {
-        chatService.updateStatus(user_id, isAnswering);
+    public ResponseEntity updateChatStatus(@RequestBody StatusRequest statusRequest) throws Exception {
+        chatService.updateStatus(statusRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -59,9 +61,9 @@ public class ChatbotController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/v1/context")
-    public ResponseEntity contextSwitching(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
+    public ResponseEntity contextSwitching(@RequestBody Request chatRequest, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
-        chatService.contextSwitching(user.getId(), fcmToken);
+        chatService.contextSwitching(user.getId(), chatRequest.getFcmToken());
         return ResponseEntity.accepted().build();
     }
 
@@ -73,9 +75,9 @@ public class ChatbotController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/v1/source")
-    public ResponseEntity getSource(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
+    public ResponseEntity getSource(@RequestBody Request chatRequest, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
-        chatService.getSource(user.getId(), fcmToken);
+        chatService.getSource(user.getId(), chatRequest.getFcmToken());
         return ResponseEntity.accepted().build();
     }
 }

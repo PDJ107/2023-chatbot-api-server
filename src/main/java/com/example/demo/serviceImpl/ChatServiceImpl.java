@@ -2,6 +2,7 @@ package com.example.demo.serviceImpl;
 
 import com.example.demo.domain.User;
 import com.example.demo.dto.Chat.ChatRequest;
+import com.example.demo.dto.Chat.StatusRequest;
 import com.example.demo.exceptions.ChatException;
 import com.example.demo.exceptions.ErrorCode;
 import com.example.demo.service.ChatService;
@@ -31,8 +32,8 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void updateStatus(long user_id, Boolean isAnswering) throws Exception {
-        userService.updateAnsweringStatus(user_id, isAnswering);
+    public void updateStatus(StatusRequest statusRequest) throws Exception {
+        userService.updateAnsweringStatus(statusRequest.getUser_id(), statusRequest.getIsAnswering());
     }
 
     @Override
