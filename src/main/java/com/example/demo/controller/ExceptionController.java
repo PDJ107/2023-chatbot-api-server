@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.exception.BaseException;
+import com.example.demo.exceptions.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
