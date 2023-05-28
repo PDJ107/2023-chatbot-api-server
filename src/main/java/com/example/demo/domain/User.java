@@ -16,6 +16,7 @@ public class User extends CustomEntity {
     private String nickname;
     private String password;
     private String email;
+    private Boolean isAnswering;
 
     @Enumerated(EnumType.STRING)
     private Major major;
@@ -23,4 +24,8 @@ public class User extends CustomEntity {
     private int grade;
 
     protected User() {}
+
+    public void setAnswering(Boolean answering) {
+        isAnswering = answering;
+    }
 }
