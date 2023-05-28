@@ -1,16 +1,13 @@
-package com.example.demo.util;
+package com.example.demo.utils;
 
-import com.example.demo.exception.AuthException;
-import com.example.demo.exception.ErrorCode;
+import com.example.demo.exceptions.AuthException;
+import com.example.demo.exceptions.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +32,9 @@ public class JwtUtil {
         return headers;
     }
 
-    private Map<String, Object> getPayload(Long memberId) {
+    private Map<String, Object> getPayload(Long userId) {
         Map<String, Object> payloads = new HashMap<String, Object>();
-        payloads.put("id", memberId);
+        payloads.put("id", userId);
 
         return payloads;
     }
