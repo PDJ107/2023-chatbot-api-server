@@ -51,14 +51,14 @@ public class ChatbotController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/v1/context")
+    @PostMapping("/v1/context")
     public ResponseEntity contextSwitching(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
         chatService.contextSwitching(user.getId(), fcmToken);
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/v1/source")
+    @PostMapping("/v1/source")
     public ResponseEntity getSource(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
         chatService.getSource(user.getId(), fcmToken);
