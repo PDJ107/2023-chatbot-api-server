@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ChatbotController {
     private ChatService chatService;
 
-    @Operation(summary = "챗봇 질의응답", description = "챗봇과의 질의응답을 위한 api입니다.", tags = { "ChatbotController" })
+    @Operation(summary = "챗봇 질의응답", description = "챗봇과의 질의응답을 위한 api입니다. JWT 토큰과 FCM 토큰이 필요합니다.", tags = { "ChatbotController" })
     @ApiResponses({
             @ApiResponse(responseCode = "202", description = "ACCEPTED"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -38,7 +38,7 @@ public class ChatbotController {
         return ResponseEntity.accepted().build();
     }
 
-    @Operation(summary = "답변 상태 변경", description = "답변중인지 여부를 업데이트합니다.", tags = { "ChatbotController" })
+    @Operation(summary = "답변 상태 변경", description = "답변중인지 여부를 업데이트합니다. JWT 토큰과 FCM 토큰이 필요합니다.", tags = { "ChatbotController" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "NO CONTENT"),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -51,6 +51,13 @@ public class ChatbotController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "context 초기화", description = "현재 검색된 context를 초기화합니다.(주제변경) JWT 토큰과 FCM 토큰이 필요합니다.", tags = { "ChatbotController" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "ACCEPTED"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PostMapping("/v1/context")
     public ResponseEntity contextSwitching(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
@@ -58,6 +65,13 @@ public class ChatbotController {
         return ResponseEntity.accepted().build();
     }
 
+    @Operation(summary = "출처 요청", description = "현재 검색된 context의 출처를 요청합니다. JWT 토큰과 FCM 토큰이 필요합니다.", tags = { "ChatbotController" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "ACCEPTED"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PostMapping("/v1/source")
     public ResponseEntity getSource(@RequestBody String fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
