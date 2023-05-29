@@ -1,4 +1,4 @@
-package com.example.demo.dto.Chat;
+package com.example.demo.dto.toChatbot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,5 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class Request {
-    private String fcmToken;
+    String user_id;
+    String fcm_token;
 }

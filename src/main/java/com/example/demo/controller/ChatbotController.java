@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.Chat.ChatRequest;
-import com.example.demo.dto.Chat.Request;
+import com.example.demo.dto.Chat.FCMToken;
 import com.example.demo.dto.Chat.StatusRequest;
 import com.example.demo.intercepter.CurrentUserInfo;
 import com.example.demo.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatbotController {
-    private ChatService chatService;
+    private final ChatService chatService;
 
     @Operation(summary = "챗봇 질의응답", description = "챗봇과의 질의응답을 위한 api입니다. JWT 토큰과 FCM 토큰이 필요합니다.", tags = { "ChatbotController" })
     @ApiResponses({
@@ -33,7 +31,8 @@ public class ChatbotController {
     public ResponseEntity chat(@RequestBody ChatRequest chatRequest, HttpServletRequest request) throws Exception {
         // 1. 내 정보 가져오기
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
-
+        System.out.println(chatRequest.getQuestion());
+        System.out.println(chatRequest.getFcmToken());
         // 2. 질문 및 내 정보로 답변 요청 (python chatbot)
         chatService.request(user.getId(), chatRequest);
 
@@ -61,9 +60,9 @@ public class ChatbotController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/v1/context")
-    public ResponseEntity contextSwitching(@RequestBody Request chatRequest, HttpServletRequest request) throws Exception {
+    public ResponseEntity contextSwitching(@RequestBody FCMToken fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
-        chatService.contextSwitching(user.getId(), chatRequest.getFcmToken());
+        chatService.initContext(user.getId(), fcmToken.getFcmToken());
         return ResponseEntity.accepted().build();
     }
 
@@ -75,9 +74,9 @@ public class ChatbotController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/v1/source")
-    public ResponseEntity getSource(@RequestBody Request chatRequest, HttpServletRequest request) throws Exception {
+    public ResponseEntity getSource(@RequestBody FCMToken fcmToken, HttpServletRequest request) throws Exception {
         CurrentUserInfo user = (CurrentUserInfo) request.getAttribute("CurrentUserInfo");
-        chatService.getSource(user.getId(), chatRequest.getFcmToken());
+        chatService.getSource(user.getId(), fcmToken.getFcmToken());
         return ResponseEntity.accepted().build();
     }
 }

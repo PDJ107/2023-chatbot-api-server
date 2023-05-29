@@ -2,6 +2,7 @@ package com.example.demo.intercepter;
 
 import com.example.demo.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class UserAuthenticationInterceptor implements HandlerInterceptor {
 
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

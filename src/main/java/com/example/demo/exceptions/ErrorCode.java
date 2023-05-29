@@ -35,6 +35,7 @@ public enum ErrorCode {
 
     // Chat
     Answering_User("CHAT_01", "현재 답변중인 유저입니다.", HttpStatus.BAD_REQUEST),
+    Chat_Request_Failed("CHAT_02", "Chat Server 요청이 실패했습니다.", HttpStatus.BAD_GATEWAY),
     ;
     private String code;
     private String message;
